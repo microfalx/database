@@ -63,6 +63,11 @@ public abstract class AbstractDatabase extends AbstractNode implements Database 
     }
 
     @Override
+    public final QueryProvider getQueryProvider() {
+        return new QueryProviderImpl(this);
+    }
+
+    @Override
     public final String getSchemaName() {
         if (schemaName == null) {
             schemaName = doGetSchemaName();

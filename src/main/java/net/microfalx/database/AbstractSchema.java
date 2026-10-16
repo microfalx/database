@@ -55,6 +55,11 @@ public abstract class AbstractSchema implements Schema {
     }
 
     @Override
+    public QueryProvider getQueryProvider() {
+        return database.getQueryProvider();
+    }
+
+    @Override
     public String getName() {
         if (name == null) {
             name = database.getSchemaName();

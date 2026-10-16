@@ -30,9 +30,17 @@ public interface Database extends Node {
 
     /**
      * Returns the schema of this database.
+     *
      * @return a non-null instance
      */
     Schema getSchema();
+
+    /**
+     * Returns the query provider for this database.
+     *
+     * @return a non-null instance
+     */
+    QueryProvider getQueryProvider();
 
     /**
      * Returns the nodes supporting this database.

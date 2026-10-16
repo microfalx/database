@@ -46,6 +46,10 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseService.class);
 
+    public static DatabaseService getInstance() {
+        return net.microfalx.service.api.Service.lookup(DatabaseService.class);
+    }
+
     private static final long SESSION_REFRESH_INTERVAL = 5_000;
     private static final long TRANSACTION_REFRESH_INTERVAL = 5_000;
     private static final long STATEMENT_CACHE = 5_000;

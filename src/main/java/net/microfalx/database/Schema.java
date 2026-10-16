@@ -19,6 +19,13 @@ public interface Schema extends Identifiable<String>, Nameable {
     Database getDatabase();
 
     /**
+     * Returns the query provider for this schema.
+     *
+     * @return a non-null instance
+     */
+    QueryProvider getQueryProvider();
+
+    /**
      * Returns the names of all tables in this schema.
      *
      * @return a non-null instance

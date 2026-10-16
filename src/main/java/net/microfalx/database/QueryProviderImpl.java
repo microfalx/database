@@ -7,7 +7,7 @@ public final class QueryProviderImpl implements QueryProvider {
     private final Database database;
     private final Schema schema;
 
-    QueryProviderImpl(Database database) {
+    public QueryProviderImpl(Database database) {
         requireNonNull(database);
         this.database = database;
         this.schema = database.getSchema();
