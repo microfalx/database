@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import net.microfalx.database.mysql.MySqlDatabase;
 import net.microfalx.database.vertica.VerticaDatabase;
 import net.microfalx.lang.*;
+import net.microfalx.lang.annotation.Provider;
 import net.microfalx.objectpool.ObjectPoolException;
 import net.microfalx.service.api.Service;
 import net.microfalx.store.api.Store;
@@ -42,6 +43,7 @@ import static net.microfalx.lang.TimeUtils.millisSince;
 /**
  * A service which provides database specific support.
  */
+@Provider
 public class DatabaseService implements Service, Service.Lifecycle, Initializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseService.class);
