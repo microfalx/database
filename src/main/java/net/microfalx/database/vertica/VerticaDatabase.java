@@ -2,7 +2,7 @@ package net.microfalx.database.vertica;
 
 import net.microfalx.database.*;
 import net.microfalx.lang.HostnameUtils;
-import net.microfalx.metrics.statistics.SimpleStatisticalSummary;
+import net.microfalx.metrics.statistics.SimpleFloatStatisticalSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -143,7 +143,7 @@ public class VerticaDatabase extends AbstractDatabase {
                 String userName = rs.getString("user_name");
                 Statement statement = Statement.create(this, request, userName)
                         .withExecutionTime(toZonedDateTimeSameInstant(rs.getTimestamp("max_start_timestamp"), getZoneId()));
-                SimpleStatisticalSummary statisticalSummary = new SimpleStatisticalSummary();
+                SimpleFloatStatisticalSummary statisticalSummary = new SimpleFloatStatisticalSummary();
                 statisticalSummary.setN(rs.getInt("request_cnt"))
                         .setSum(rs.getLong("total_request_duration_ms"))
                         .setMin(rs.getFloat("min_request_duration_ms"))

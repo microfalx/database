@@ -2,7 +2,7 @@ package net.microfalx.database;
 
 import net.microfalx.lang.Hashing;
 import net.microfalx.lang.StringUtils;
-import net.microfalx.metrics.statistics.SimpleStatisticalSummary;
+import net.microfalx.metrics.statistics.SimpleFloatStatisticalSummary;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.SetStatement;
@@ -216,7 +216,7 @@ public class StatementImpl implements Statement, Cloneable {
         }
     }
 
-    public static class StatisticsImpl extends SimpleStatisticalSummary implements Statistics {
+    public static class StatisticsImpl extends SimpleFloatStatisticalSummary implements Statistics {
 
         public StatisticsImpl() {
         }
