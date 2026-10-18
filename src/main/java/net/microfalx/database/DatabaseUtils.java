@@ -25,6 +25,8 @@ public class DatabaseUtils {
     private static final String COMMENT_START = "/*";
     private static final String COMMENT_END = "*/";
 
+    public static final String DEFAULT_ID = "default";
+
     public static final String JDBC_SCHEME = "jdbc";
     public static final String MYSQL_SCHEME = "mysql";
     public static final String MARIADB_SCHEME = "mariadb";

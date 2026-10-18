@@ -37,7 +37,8 @@ import static net.microfalx.lang.ArgumentUtils.requireNonNull;
 import static net.microfalx.lang.ArgumentUtils.requireNotEmpty;
 import static net.microfalx.lang.ConcurrencyUtils.*;
 import static net.microfalx.lang.ExceptionUtils.*;
-import static net.microfalx.lang.StringUtils.*;
+import static net.microfalx.lang.StringUtils.joinNames;
+import static net.microfalx.lang.StringUtils.toIdentifier;
 import static net.microfalx.lang.TimeUtils.millisSince;
 
 /**
@@ -77,8 +78,7 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
 
     private Store<Statement, String> statementStore;
 
-    private String applicationName;
-    private String defaultDataSource;
+    private DataSource defaultDataSource;
 
     /**
      * Returns the task executor for this service.
@@ -142,7 +142,7 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
         if (defaultDataSource == null) {
             throw new IllegalStateException("No default data source is configured");
         }
-        return getDatabase(defaultDataSource);
+        return getDatabase(defaultDataSource.getId());
     }
 
     /**
@@ -280,10 +280,11 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
     public void registerDataSource(DataSource dataSource) {
         requireNonNull(dataSource);
         String id = toIdentifier(dataSource.getId());
+        String type = defaultDataSource == null ? "default" : "additional";
         if (!dataSources.containsKey(id)) {
-            LOGGER.info("Register data source '{}', name '{}'", dataSource.getId(), dataSource.getName());
+            LOGGER.info("Register {} data source '{}', name '{}'", type, dataSource.getId(), dataSource.getName());
         } else {
-            LOGGER.info("Reload data source '{}', name '{}'", dataSource.getId(), dataSource.getName());
+            LOGGER.info("Reload {} data source '{}', name '{}'", type, dataSource.getId(), dataSource.getName());
         }
         releaseDataSource(dataSource);
         if (!dataSource.isNode()) {
@@ -295,6 +296,7 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
                 workerTaskExecutor.submit(new ValidateDatabase(database));
             }
         }
+        if (defaultDataSource == null) defaultDataSource = dataSource;
         dataSources.put(id, dataSource);
     }
 
@@ -398,7 +400,6 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
 
     @Override
     public void initialize(Object... context) {
-        initializeDataSource();
         initializeStores();
     }
 
@@ -421,16 +422,6 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
 
     private void startTasks() {
         coordinatorTaskExecutor.scheduleWithFixedDelay(new ValidateDatabases(), AVAILABILITY_INTERVAL.dividedBy(2));
-    }
-
-    private void initializeDataSource() {
-        if (dataSource == null) return;
-        String name = defaultIfEmpty(applicationName, "Default");
-        String id = toIdentifier(name);
-        this.defaultDataSource = id;
-        DataSource newDataSource = updateProperties(DataSource.create(id, name, dataSource)
-                .withDescription("The application database"));
-        registerDataSource(newDataSource);
     }
 
     private Database createDatabase(DataSource dataSource) {
