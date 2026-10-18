@@ -1,6 +1,7 @@
 package net.microfalx.database;
 
 import net.microfalx.lang.TimeUtils;
+import net.microfalx.lang.annotation.SizeOf;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
 import java.net.InetAddress;
@@ -25,12 +26,14 @@ public abstract class AbstractNode implements Node {
 
     private static final String VALIDATE_SQL = "select 1";
 
+    @SizeOf
     transient AbstractDatabase database;
     String databaseId;
     private final String id;
     private final String name;
     private String displayName;
 
+    @SizeOf
     private transient DataSource dataSource;
     String dataSourceId;
     private LocalDateTime startedAt = LocalDateTime.now();

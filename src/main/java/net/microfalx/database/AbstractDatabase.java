@@ -2,6 +2,7 @@ package net.microfalx.database;
 
 import net.microfalx.jdbcpool.ConnectionPool;
 import net.microfalx.lang.TimeUtils;
+import net.microfalx.lang.annotation.SizeOf;
 import net.microfalx.metrics.Metrics;
 import net.microfalx.objectpool.ObjectPoolException;
 import org.slf4j.Logger;
@@ -40,10 +41,12 @@ public abstract class AbstractDatabase extends AbstractNode implements Database 
     private static final long REFRESH_NODES_INTERVAL = TimeUtils.ONE_MINUTE;
     public static final int UNAVAILABLE_PORT = -1;
 
+    @SizeOf
     transient DatabaseService databaseService;
 
     private volatile long lastNodesUpdate = 0;
     private volatile Map<String, Node> nodes = Collections.emptyMap();
+    @SizeOf
     private volatile Metrics metrics;
     private volatile String schemaName;
 

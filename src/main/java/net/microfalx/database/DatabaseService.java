@@ -59,6 +59,7 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
     private static final Duration wait = ofSeconds(2);
     private static final Duration timeout = ofSeconds(10);
 
+    private DataSource defaultDataSource;
     private final Map<String, DataSource> dataSources = new ConcurrentHashMap<>();
     private final Map<String, Database> databases = new ConcurrentHashMap<>();
 
@@ -71,14 +72,10 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
     private volatile long lastTransactionExtractTime = TimeUtils.oneHourAgo();
     private final AtomicBoolean extractingTransactions = new AtomicBoolean();
 
-    private javax.sql.DataSource dataSource;
-
     private ThreadPool coordinatorTaskExecutor;
     private ThreadPool workerTaskExecutor;
 
     private Store<Statement, String> statementStore;
-
-    private DataSource defaultDataSource;
 
     /**
      * Returns the task executor for this service.
@@ -87,6 +84,15 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
      */
     public ThreadPool getThreadPool() {
         return coordinatorTaskExecutor;
+    }
+
+    /**
+     * Returns the default data source.
+     *
+     * @return an optional data source
+     */
+    public Optional<DataSource> getDefaultDataSource() {
+        return Optional.ofNullable(defaultDataSource);
     }
 
     /**
@@ -136,13 +142,14 @@ public class DatabaseService implements Service, Service.Lifecycle, Initializabl
     /**
      * Returns the default database.
      *
-     * @return the data source
+     * @return the optional database
      */
-    public Database getDefaultDatabase() {
-        if (defaultDataSource == null) {
-            throw new IllegalStateException("No default data source is configured");
+    public Optional<Database> getDefaultDatabase() {
+        if (defaultDataSource != null) {
+            return Optional.of(getDatabase(defaultDataSource.getId()));
+        } else {
+            return Optional.empty();
         }
-        return getDatabase(defaultDataSource.getId());
     }
 
     /**

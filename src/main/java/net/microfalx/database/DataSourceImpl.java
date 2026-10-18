@@ -2,6 +2,7 @@ package net.microfalx.database;
 
 import com.zaxxer.hikari.HikariDataSource;
 import net.microfalx.lang.StringUtils;
+import net.microfalx.lang.annotation.SizeOf;
 
 import java.net.URI;
 import java.sql.Connection;
@@ -27,6 +28,7 @@ class DataSourceImpl implements DataSource, Cloneable {
     private final String id;
     private final String name;
     private String description;
+    @SizeOf
     private final javax.sql.DataSource dataSource;
 
     private URI uri;

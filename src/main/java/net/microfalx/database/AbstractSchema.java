@@ -2,6 +2,7 @@ package net.microfalx.database;
 
 import lombok.extern.slf4j.Slf4j;
 import net.microfalx.lang.ObjectUtils;
+import net.microfalx.lang.annotation.SizeOf;
 import net.microfalx.metrics.Metrics;
 import net.microfalx.resource.ClassPathResource;
 import net.microfalx.resource.Resource;
@@ -27,6 +28,7 @@ public abstract class AbstractSchema implements Schema {
 
     public static final Metrics METRICS = DatabaseUtils.METRICS.withGroup("Schema");
 
+    @SizeOf
     private final Database database;
     private volatile String name;
 

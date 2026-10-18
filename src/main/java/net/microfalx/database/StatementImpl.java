@@ -2,6 +2,7 @@ package net.microfalx.database;
 
 import net.microfalx.lang.Hashing;
 import net.microfalx.lang.StringUtils;
+import net.microfalx.lang.annotation.SizeOf;
 import net.microfalx.metrics.statistics.SimpleFloatStatisticalSummary;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -35,6 +36,7 @@ import static net.microfalx.lang.StringUtils.split;
 
 public class StatementImpl implements Statement, Cloneable {
 
+    @SizeOf
     transient Node node;
     String nodeId;
     private final String id;

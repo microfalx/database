@@ -2,6 +2,7 @@ package net.microfalx.database;
 
 import net.microfalx.lang.ExceptionUtils;
 import net.microfalx.lang.StringUtils;
+import net.microfalx.lang.annotation.SizeOf;
 
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import static net.microfalx.lang.ArgumentUtils.requireNonNull;
 public abstract class AbstractSchemaObject<O extends AbstractSchemaObject<O>> implements SchemaObject<O>, Cloneable {
 
     private final String id;
+    @SizeOf
     private final Schema schema;
     private final String name;
     private final Type type;
