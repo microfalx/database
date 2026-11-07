@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import net.microfalx.lang.Identifiable;
+import net.microfalx.lang.Serde;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,7 +47,8 @@ public class Snapshot implements Identifiable<String> {
         requireNonNull(database);
         this.database = database;
         this.databaseId = database.getId();
-        this.id = database.getId() + "_" + Long.toString(currentTimeMillis(), MAX_RADIX) + "_" + COUNTER.getAndIncrement();
+        this.id = database.getId() + "_" + Long.toString(currentTimeMillis(), MAX_RADIX)
+                + "_" + COUNTER.getAndIncrement();
     }
 
     @Override
@@ -145,19 +147,22 @@ public class Snapshot implements Identifiable<String> {
 
     public void serialize(OutputStream outputStream) {
         requireNotEmpty(outputStream);
-        Output output = new Output(outputStream);
-        Kryo kryo = new Kryo();
-        kryo.setRegistrationRequired(false);
-        kryo.writeClassAndObject(output, this);
-        output.close();
+        Kryo kryo = Serde.obtain();
+        try (Output output = new Output(outputStream)) {
+            kryo.writeClassAndObject(output, this);
+        } finally {
+            Serde.free(kryo);
+        }
     }
 
     public static Snapshot deserialize(InputStream inputStream) {
         requireNotEmpty(inputStream);
-        Input input = new Input(inputStream);
-        Kryo kryo = new Kryo();
-        kryo.setRegistrationRequired(false);
-        return (Snapshot) kryo.readClassAndObject(input);
+        Kryo kryo = Serde.obtain();
+        try {
+            return (Snapshot) kryo.readClassAndObject(new Input(inputStream));
+        } finally {
+            Serde.free(kryo);
+        }
     }
 
     @Override
