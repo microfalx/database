@@ -1,8 +1,5 @@
 package net.microfalx.database;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 import net.microfalx.lang.Identifiable;
 import net.microfalx.lang.Serde;
 
@@ -17,7 +14,6 @@ import static java.lang.Character.MAX_RADIX;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Collections.unmodifiableCollection;
 import static net.microfalx.lang.ArgumentUtils.requireNonNull;
-import static net.microfalx.lang.ArgumentUtils.requireNotEmpty;
 
 /**
  * A class which carries a snapshot of all metrics for a database
@@ -146,23 +142,11 @@ public class Snapshot implements Identifiable<String> {
     }
 
     public void serialize(OutputStream outputStream) {
-        requireNotEmpty(outputStream);
-        Kryo kryo = Serde.obtain();
-        try (Output output = new Output(outputStream)) {
-            kryo.writeClassAndObject(output, this);
-        } finally {
-            Serde.free(kryo);
-        }
+        Serde.serialize(this, outputStream);
     }
 
     public static Snapshot deserialize(InputStream inputStream) {
-        requireNotEmpty(inputStream);
-        Kryo kryo = Serde.obtain();
-        try {
-            return (Snapshot) kryo.readClassAndObject(new Input(inputStream));
-        } finally {
-            Serde.free(kryo);
-        }
+        return Serde.deserialize(inputStream);
     }
 
     @Override
